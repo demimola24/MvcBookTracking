@@ -21,42 +21,48 @@ public static class SeedData
             context.CategoryType.AddRange(
                 new CategoryType
                 {
-                    Id = 0,
+                    Id = 1,
                     Type = "Physical",
                     Name = "Physical books"                    
                 },
                 new CategoryType
                 {
-                    Id = 1,
+                    Id = 2,
                     Type = "Digital",
                     Name = "Virtual books"                    
                 }
             );
 
+            // Look for any Category.
+            if (context.Category.Any())
+            {
+                return;   // DB has been seeded
+            }
+
             context.Category.AddRange(
                 new Category
                 {
-                    Id = 0,
-                    Type = 0,
+                    Id = 5,
+                    Type = 1,
                     Description = "Romance books"                    
                 },
                 new Category
                 {
-                    Id = 0,
-                    Type = 0,
+                    Id = 6,
+                    Type = 1,
                     Description = "History books"                    
                 },
                 new Category
                 {
-                    Id = 0,
-                    Type = 1,
-                    Description = "Digital School books"                    
+                    Id = 7,
+                    Type = 2,
+                    Description = " School books"                    
                 },
                  new Category
                 {
-                    Id = 0,
-                    Type = 1,
-                    Description = "Digital Travel books"                    
+                    Id = 8,
+                    Type = 2,
+                    Description = "Travel books"                    
                 }
             );
             context.SaveChanges();

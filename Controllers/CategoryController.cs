@@ -21,7 +21,16 @@ namespace MvcBook.Controllers
         // GET: Category
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Category.ToListAsync());
+             var query = _context.Category.Join(_context.CategoryType, r => r.Type, 
+                                p => p.Id, 
+             (r,p) => new CategoryAndType 
+                      {
+                         Id = r.Id,                                                  
+                         Description = r.Description,
+                         Type = p.Name
+                      }).ToListAsync();
+
+              return View(await query);
         }
 
         // GET: Category/Details/5
@@ -32,8 +41,15 @@ namespace MvcBook.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category
-                .FirstOrDefaultAsync(m => m.Id == id);
+           var category =  await  _context.Category.Join(_context.CategoryType, r => r.Type, 
+                                p => p.Id, 
+             (r,p) => new CategoryAndType 
+                      {
+                         Id = r.Id,                                                  
+                         Description = r.Description,
+                         Type = p.Name
+                      }).FirstOrDefaultAsync(m => m.Id == id);
+                        
             if (category == null)
             {
                 return NotFound();

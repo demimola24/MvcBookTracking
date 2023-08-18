@@ -21,9 +21,21 @@ namespace MvcBook.Controllers
         // GET: Book
         public async Task<IActionResult> Index()
         {
-              return _context.Book != null ? 
-                          View(await _context.Book.ToListAsync()) :
-                          Problem("Entity set 'MvcBookContext.Book'  is null.");
+               if(_context.Book != null){
+                var query = _context.Book.Join(_context.Category, r => r.Category, 
+                                p => p.Id, 
+             (r,p) => new BookAndCategoryName 
+                      {
+                         Id = r.Id,
+                         ISBN = r.ISBN,
+                         Title = r.Title,
+                         Author = r.Author,
+                         CategoryName = p.Description
+                      }).ToListAsync();
+
+                 return View(await query);
+                }                                                    
+                return Problem("Entity set 'MvcBookContext.Book'  is null.");
         }
 
         // GET: Book/Details/5
@@ -34,8 +46,17 @@ namespace MvcBook.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Book
-                .FirstOrDefaultAsync(m => m.Id == id);
+              var book = await _context.Book.Join(_context.Category, r => r.Category, 
+                                p => p.Id, 
+             (r,p) => new BookAndCategoryName 
+                      {
+                         Id = r.Id,
+                         ISBN = r.ISBN,
+                         Title = r.Title,
+                         Author = r.Author,
+                         CategoryName = p.Description
+                      }).FirstOrDefaultAsync(m => m.Id == id);
+
             if (book == null)
             {
                 return NotFound();
@@ -47,6 +68,9 @@ namespace MvcBook.Controllers
         // GET: Book/Create
         public IActionResult Create()
         {
+             List<Category> cl =  _context.Category.AsQueryable().ToList();   
+            cl.Insert(0, new Category{ Id = 0, Type=0,Description = "--Select Category--" });   
+            ViewBag.message = cl;  
             return View();
         }
 
@@ -63,6 +87,7 @@ namespace MvcBook.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+              
             return View(book);
         }
 
@@ -79,6 +104,9 @@ namespace MvcBook.Controllers
             {
                 return NotFound();
             }
+            List<Category> cl =  _context.Category.AsQueryable().ToList();   
+            cl.Insert(0, new Category{ Id = 0, Type=0,Description = "--Select Category--" });   
+            ViewBag.message = cl;  
             return View(book);
         }
 
