@@ -53,7 +53,7 @@ namespace MvcBook.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Type,Description")] CategoryType categoryType)
+        public async Task<IActionResult> Create([Bind("Id,Type,Name")] CategoryType categoryType)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +85,7 @@ namespace MvcBook.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Description")] CategoryType categoryType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Name")] CategoryType categoryType)
         {
             if (id != categoryType.Id)
             {
